@@ -43,6 +43,7 @@ export const AppProvider = ({ children }) => {
         user,
         loading,
         fetchUser,
+        setUser,
         logout,
       }}
     >

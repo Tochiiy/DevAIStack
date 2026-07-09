@@ -18,10 +18,12 @@ const Navbar = () => {
 
   const links = [
     { to: "/", label: "Home" },
+    { to: "/about", label: "About" },
     ...(isAuth
       ? [
           { to: "/dashboard", label: "Dashboard" },
           { to: "/auth-guide", label: "Guide" },
+          { to: "/about-me", label: "Me" },
           ...(user?.role === "admin" ? [{ to: "/admin", label: "Admin" }] : []),
         ]
       : [
@@ -39,7 +41,7 @@ const Navbar = () => {
             className="flex items-center gap-2 text-gray-900 dark:text-white font-bold text-lg md:text-xl"
           >
             <FiShield className="text-yellow-500" size={24} />
-            MernAuthSystem
+            DevAIStack
           </Link>
 
           <div className="hidden md:flex items-center gap-6">

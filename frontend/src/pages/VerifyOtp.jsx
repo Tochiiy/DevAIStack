@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { FiLoader, FiArrowLeft } from "react-icons/fi";
 import { toast } from "react-toastify";
 import api from "./apiInterceptor";
+import { useAuth } from "../context/AuthContext";
 
 const VerifyOtp = () => {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { setUser } = useAuth();
 
   useEffect(() => {
     const saved = localStorage.getItem("email");
@@ -35,6 +37,7 @@ const VerifyOtp = () => {
 
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.removeItem("email");
+      setUser(data.user);
       toast.success(data.message);
       navigate("/dashboard");
     } catch (err) {

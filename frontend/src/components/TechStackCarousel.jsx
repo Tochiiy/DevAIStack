@@ -10,6 +10,11 @@ import {
   FiShield,
   FiLayout,
   FiGitBranch,
+  FiCloud,
+  FiCpu,
+  FiLayers,
+  FiBox,
+  FiArrowRight,
 } from "react-icons/fi";
 import {
   SiReact,
@@ -21,6 +26,14 @@ import {
   SiRedis,
   SiGmail,
   SiJsonwebtokens,
+  SiTypescript,
+  SiPostgresql,
+  SiPrisma,
+  SiDocker,
+  SiGooglecloud,
+  SiPython,
+  SiFastapi,
+  SiLanggraph,
 } from "react-icons/si";
 
 const slides = [
@@ -66,6 +79,49 @@ const slides = [
     ),
   },
   {
+    title: "TypeScript",
+    subtitle: "Static typing for JS",
+    icon: SiTypescript,
+    desc: "TypeScript brings static typing, interfaces, generics, and improved tooling to full-stack JavaScript development.",
+    gradient: "from-indigo-500 to-blue-600",
+    graphic: (
+      <div className="relative w-full h-48 flex flex-col items-center justify-center gap-3">
+        <div className="relative">
+          <div className="w-40 h-36 rounded-2xl border border-indigo-400/30 bg-indigo-500/5 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-2">
+              <SiTypescript size={32} className="text-[#3178C6]" />
+              <div className="space-y-1.5 w-28">
+                <div className="flex gap-1">
+                  <div className="h-2 rounded bg-indigo-400/30 w-8" />
+                  <div className="h-2 rounded bg-indigo-400/20 w-12" />
+                  <div className="h-2 rounded bg-indigo-400/30 w-6" />
+                </div>
+                <div className="flex gap-1">
+                  <div className="h-2 rounded bg-yellow-500/40 w-10" />
+                  <div className="h-2 rounded bg-indigo-400/20 w-8" />
+                  <div className="h-2 rounded bg-indigo-400/30 w-7" />
+                </div>
+                <div className="flex gap-1">
+                  <div className="h-2 rounded bg-indigo-400/30 w-6" />
+                  <div className="h-2 rounded bg-yellow-500/40 w-14" />
+                  <div className="h-2 rounded bg-indigo-400/20 w-5" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="absolute -top-2 -right-2 px-2 py-0.5 rounded bg-yellow-500/20 border border-yellow-500/30">
+            <span className="text-[10px] font-medium text-yellow-400">.ts</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 mt-1">
+          <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 font-medium">interface</span>
+          <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-medium">generics</span>
+          <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-medium">utility</span>
+        </div>
+      </div>
+    ),
+  },
+  {
     title: "Backend",
     subtitle: "Express + Node.js + Zod",
     icon: SiExpress,
@@ -102,7 +158,7 @@ const slides = [
     ),
   },
   {
-    title: "Database",
+    title: "Database (MongoDB)",
     subtitle: "MongoDB + Mongoose",
     icon: SiMongodb,
     desc: "MongoDB with Mongoose schemas stores users and handles document relationships efficiently.",
@@ -126,6 +182,36 @@ const slides = [
           <div className="absolute -bottom-2 -left-2 px-2 py-1 rounded bg-emerald-500/20 border border-emerald-500/30">
             <span className="text-[10px] font-medium text-emerald-400">User</span>
           </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "PostgreSQL & Prisma",
+    subtitle: "Relational DB + Type-safe ORM",
+    icon: SiPostgresql,
+    desc: "PostgreSQL with Prisma ORM provides type-safe queries, migrations, and relations for production data.",
+    gradient: "from-cyan-500 to-blue-600",
+    graphic: (
+      <div className="relative w-full h-48 flex flex-col items-center justify-center gap-3">
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col items-center">
+            <div className="w-16 h-16 rounded-xl border border-cyan-400/40 bg-cyan-500/10 flex items-center justify-center mb-2">
+              <SiPostgresql size={28} className="text-[#4169E1]" />
+            </div>
+            <span className="text-[10px] font-medium text-cyan-400">PostgreSQL</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="w-16 h-16 rounded-xl border border-blue-400/40 bg-blue-500/10 flex items-center justify-center mb-2">
+              <SiPrisma size={28} className="text-[#2D3748]" />
+            </div>
+            <span className="text-[10px] font-medium text-blue-400">Prisma</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-400 font-medium">Migrations</span>
+          <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-medium">Typesafe</span>
+          <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-medium">Relations</span>
         </div>
       </div>
     ),
@@ -157,6 +243,210 @@ const slides = [
               <span className="text-[10px] font-mono text-amber-400">refresh:</span>
               <span className="text-[10px] text-amber-400/60">sha256...</span>
             </div>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "Docker & DevOps",
+    subtitle: "Containers + CI/CD",
+    icon: SiDocker,
+    desc: "Docker containers, docker-compose for local dev, and Vercel + Render for production deployment.",
+    gradient: "from-sky-500 to-indigo-600",
+    graphic: (
+      <div className="relative w-full h-48 flex flex-col items-center justify-center gap-3">
+        <div className="relative">
+          <div className="flex items-end gap-2 mb-2">
+            <div className="w-10 h-14 rounded-t border border-sky-400/40 bg-sky-500/10 flex items-center justify-center">
+              <SiDocker size={20} className="text-[#2496ED]" />
+            </div>
+            <div className="w-10 h-16 rounded-t border border-indigo-400/40 bg-indigo-500/10 flex items-center justify-center">
+              <FiServer size={18} className="text-indigo-400" />
+            </div>
+            <div className="w-10 h-12 rounded-t border border-cyan-400/40 bg-cyan-500/10 flex items-center justify-center">
+              <SiNodedotjs size={16} className="text-[#339933]" />
+            </div>
+          </div>
+          <div className="w-40 h-0.5 rounded bg-gradient-to-r from-sky-400/40 via-indigo-400/40 to-cyan-400/40" />
+          <div className="flex items-center justify-center gap-2 mt-2">
+            <span className="text-[10px] px-2 py-0.5 rounded bg-sky-500/20 text-sky-400 font-medium">Dockerfile</span>
+            <span className="text-[10px] px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 font-medium">CI/CD</span>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "Cloud Computing",
+    subtitle: "AWS + GCP + Vercel",
+    icon: FiCloud,
+    desc: "Cloud platforms: AWS (EC2, S3, Lambda), GCP (Cloud Run, Vertex AI), and Vercel for modern deployments.",
+    gradient: "from-orange-500 to-yellow-600",
+    graphic: (
+      <div className="relative w-full h-48 flex flex-col items-center justify-center gap-3">
+        <div className="relative">
+          <div className="flex items-center gap-3">
+            <div className="flex flex-col items-center">
+              <div className="w-14 h-14 rounded-xl border border-orange-400/40 bg-orange-500/10 flex items-center justify-center mb-1">
+                <FiCloud size={24} className="text-orange-400" />
+              </div>
+              <span className="text-[10px] font-medium text-orange-400">AWS</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-14 h-14 rounded-xl border border-blue-400/40 bg-blue-500/10 flex items-center justify-center mb-1">
+                <SiGooglecloud size={22} className="text-[#4285F4]" />
+              </div>
+              <span className="text-[10px] font-medium text-blue-400">GCP</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-14 h-14 rounded-xl border border-yellow-400/40 bg-yellow-500/10 flex items-center justify-center mb-1">
+                <SiVite size={20} className="text-[#646CFF]" />
+              </div>
+              <span className="text-[10px] font-medium text-yellow-400">Vercel</span>
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-1.5 mt-3">
+            <span className="text-[10px] px-2 py-0.5 rounded bg-orange-500/20 text-orange-400 font-medium">Compute</span>
+            <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-medium">Storage</span>
+            <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-medium">Serverless</span>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "AI Engineering",
+    subtitle: "LLMs + RAG + Agents",
+    icon: FiCpu,
+    desc: "GPT-4, Claude, Llama, RAG pipelines, vector DBs, LangChain agents, and MLOps for production AI.",
+    gradient: "from-purple-500 to-pink-600",
+    graphic: (
+      <div className="relative w-full h-48 flex flex-col items-center justify-center gap-3">
+        <div className="relative">
+          <div className="w-44 h-36 rounded-2xl border border-purple-400/30 bg-purple-500/5 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-2">
+              <div className="flex items-center gap-2">
+                <div className="w-14 h-10 rounded-lg border border-purple-400/40 bg-purple-500/10 flex items-center justify-center">
+                  <SiPython size={18} className="text-[#3776AB]" />
+                </div>
+                <FiZap size={24} className="text-yellow-400" />
+                <div className="w-14 h-10 rounded-lg border border-pink-400/40 bg-pink-500/10 flex items-center justify-center">
+                  <FiDatabase size={16} className="text-pink-400" />
+                </div>
+              </div>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 font-medium">LLM</span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-medium">RAG</span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-pink-500/20 text-pink-400 font-medium">Agent</span>
+              </div>
+              <div className="flex items-center gap-1 mt-2">
+                <div className="h-1.5 w-8 rounded bg-green-400/30" />
+                <div className="h-1.5 w-6 rounded bg-green-400/50" />
+                <div className="h-1.5 w-10 rounded bg-green-400/30" />
+                <div className="h-1.5 w-7 rounded bg-green-400/50" />
+              </div>
+            </div>
+          </div>
+          <div className="absolute -top-2 -right-2 flex gap-1">
+            <span className="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 border border-purple-500/30 text-purple-400">Embeddings</span>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "Python & FastAPI",
+    subtitle: "Backend + AI glue",
+    icon: SiPython,
+    desc: "Python for data science, ML, and AI backends. FastAPI for high-performance async APIs with automatic OpenAPI docs.",
+    gradient: "from-amber-500 to-green-600",
+    graphic: (
+      <div className="relative w-full h-48 flex flex-col items-center justify-center gap-3">
+        <div className="flex items-center gap-4">
+          <div className="flex flex-col items-center">
+            <div className="w-16 h-16 rounded-xl border border-amber-400/40 bg-amber-500/10 flex items-center justify-center mb-2">
+              <SiPython size={28} className="text-[#3776AB]" />
+            </div>
+            <span className="text-[10px] font-medium text-amber-400">Python</span>
+          </div>
+          <div className="flex flex-col items-center">
+            <div className="w-16 h-16 rounded-xl border border-green-400/40 bg-green-500/10 flex items-center justify-center mb-2">
+              <SiFastapi size={28} className="text-[#009688]" />
+            </div>
+            <span className="text-[10px] font-medium text-green-400">FastAPI</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-medium">Async</span>
+          <span className="text-[10px] px-2 py-0.5 rounded bg-green-500/20 text-green-400 font-medium">Pydantic</span>
+          <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/20 text-blue-400 font-medium">OpenAPI</span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "LangChain & LangGraph",
+    subtitle: "LLM orchestration + agents",
+    icon: SiLanggraph,
+    desc: "LangChain for RAG pipelines and tool-calling chains, LangGraph for stateful multi-agent graphs, LangSmith for tracing and evals.",
+    gradient: "from-emerald-500 to-teal-600",
+    graphic: (
+      <div className="relative w-full h-48 flex flex-col items-center justify-center gap-3">
+        <div className="relative">
+          <div className="flex items-center gap-3">
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 rounded-xl border border-emerald-400/40 bg-emerald-500/10 flex items-center justify-center mb-2">
+                <SiLanggraph size={24} className="text-emerald-400" />
+              </div>
+              <span className="text-[10px] font-medium text-emerald-400">LangGraph</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 rounded-xl border border-teal-400/40 bg-teal-500/10 flex items-center justify-center mb-2">
+                <FiZap size={24} className="text-teal-400" />
+              </div>
+              <span className="text-[10px] font-medium text-teal-400">LangSmith</span>
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-1.5 mt-3">
+            <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-medium">Agents</span>
+            <span className="text-[10px] px-2 py-0.5 rounded bg-teal-500/20 text-teal-400 font-medium">Traces</span>
+            <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-medium">Evals</span>
+          </div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "Architecture Patterns",
+    subtitle: "Monolith → Microservices → Event-Driven",
+    icon: FiLayers,
+    desc: "Start modular monolith, extract to microservices at scale, use event-driven for real-time features and data pipelines.",
+    gradient: "from-rose-500 to-purple-600",
+    graphic: (
+      <div className="relative w-full h-48 flex flex-col items-center justify-center gap-3">
+        <div className="relative">
+          <div className="flex items-center gap-1.5 mb-2">
+            <div className="w-8 h-16 rounded border border-rose-400/40 bg-rose-500/10 flex items-center justify-center">
+              <FiBox size={12} className="text-rose-400" />
+            </div>
+            <FiArrowRight size={10} className="text-gray-400" />
+            <div className="flex gap-1">
+              <div className="w-6 h-16 rounded border border-purple-400/40 bg-purple-500/10 flex items-center justify-center" />
+              <div className="w-6 h-16 rounded border border-purple-400/40 bg-purple-500/10 flex items-center justify-center" />
+              <div className="w-6 h-16 rounded border border-purple-400/40 bg-purple-500/10 flex items-center justify-center" />
+            </div>
+            <FiArrowRight size={10} className="text-gray-400" />
+            <div className="flex flex-col gap-1">
+              <div className="w-5 h-5 rounded-full border border-yellow-400/40 bg-yellow-500/10" />
+              <div className="w-5 h-1 rounded bg-yellow-400/30" />
+              <div className="w-5 h-5 rounded-full border border-yellow-400/40 bg-yellow-500/10" />
+            </div>
+          </div>
+          <div className="flex items-center justify-center gap-2">
+            <span className="text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-medium">Monolith</span>
+            <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-400 font-medium">Microservices</span>
+            <span className="text-[10px] px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-400 font-medium">Event-Driven</span>
           </div>
         </div>
       </div>

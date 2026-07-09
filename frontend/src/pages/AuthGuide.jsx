@@ -16,6 +16,7 @@ import {
   FiUsers,
   FiCode,
   FiLayers,
+  FiTrash2,
 } from "react-icons/fi";
 import {
   SiReact,
@@ -634,11 +635,7 @@ const Structure = () => (
             Backend
           </p>
           <pre className="text-gray-800 dark:text-gray-200 font-medium">
-            PORT=5000 FRONTEND_URL=http://localhost:5173
-            MONGO_URI=mongodb+srv://... JWT_ACCESS_SECRET=...
-            JWT_REFRESH_SECRET=... UPSTASH_REDIS_REST_URL=...
-            UPSTASH_REDIS_REST_TOKEN=... SMTP_EMAIL=your@gmail.com
-            SMTP_PASSWORD=app_password
+            PORT=5000 FRONTEND_URL=http://localhost:5173 ........etc
           </pre>
         </div>
         <div>
@@ -744,6 +741,22 @@ const Security = () => (
             "AdminRoute on frontend redirects non-admin to /dashboard",
             "First user to verify email auto-promoted to admin",
             "Admin panel: list users, promote/demote, delete",
+          ],
+        },
+        {
+          icon: FiTrash2,
+          title: "Account Deletion",
+          color: "text-red-600 dark:text-red-400",
+          bg: "bg-red-50 dark:bg-red-900/20",
+          problem:
+            "Users should be able to permanently remove their account and all associated data.",
+          solution: [
+            "DELETE /api/auth/delete-account endpoint protected by protect middleware",
+            "Refresh token deleted from Redis before user document removal",
+            "User document removed from MongoDB via findByIdAndDelete",
+            "Both httpOnly cookies cleared on server side",
+            "Frontend confirmation modal prevents accidental deletion",
+            "LocalStorage tokens cleared after deletion, redirect to home",
           ],
         },
         {
@@ -853,6 +866,7 @@ const Implementation = () => (
           "ApiInterceptor with concurrent 401 queue: prevents multiple refresh calls",
           "Stale string-key handling for rate limit keys from legacy SET code",
           "Full error boundary: TryCatch wrapper, token expiry vs malformed vs server errors",
+          "Self-service account deletion: DELETE /auth/delete-account, confirmation modal, cleanup Redis + cookies",
         ],
       },
     ].map(({ level, icon: Icon, color, border, steps }) => (
@@ -1048,7 +1062,7 @@ const AuthGuide = () => {
 
         {/* Footer note */}
         <div className="mt-12 text-center text-base text-gray-500 dark:text-gray-400 font-medium border-t border-gray-200 dark:border-gray-700 pt-8">
-          Built with production-grade security patterns. beginners friendly.
+          Built with production-grade security patterns. beginner friendly.
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ const HeroBanner = () => {
 
       <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight animate-fade-up">
         <span className="bg-gradient-to-r from-yellow-500 to-yellow-300 bg-clip-text text-transparent">
-          Mern Auth
+          DevAIStack
         </span>
       </h1>
 

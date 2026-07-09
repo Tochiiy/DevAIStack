@@ -218,10 +218,10 @@ export const verifyOtp = TryCatch(async (req, res) => {
 
   sendMail({
     to: email,
-    subject: "Welcome to Mern Auth!",
+    subject: "Welcome to DevAIStack!",
     html: getWelcomeHtml(user.name),
   }).catch((err) =>
-    console.error(`Email failed (Welcome to Mern Auth!):`, err.message),
+    console.error(`Email failed (Welcome to DevAIStack!):`, err.message),
   );
   const REFRESH_TTL = 7 * 24 * 60 * 60;
   await redis.set(`refresh:${hashToken(refreshToken)}`, user.id, { EX: REFRESH_TTL });
@@ -341,6 +341,43 @@ export const resetPassword = TryCatch(async (req, res) => {
   await User.updateOne({ email }, { password: hashedPassword });
 
   res.json({ message: "Password reset successfully" });
+});
+
+export const deleteAccount = TryCatch(async (req, res) => {
+  const refreshToken = req.cookies?.refreshToken;
+
+  if (refreshToken) {
+    await redis.del(`refresh:${hashToken(refreshToken)}`);
+  }
+
+  await User.findByIdAndDelete(req.user._id);
+
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  res.json({ message: "Account deleted permanently" });
+});
+
+export const promoteAdmin = TryCatch(async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ message: "Email is required" });
+  }
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  user.role = "admin";
+  await user.save();
+  res.json({ message: `${email} promoted to admin`, user: { _id: user.id, name: user.name, email: user.email, role: user.role } });
 });
 
 export const getMe = TryCatch(async (req, res) => {
