@@ -35,6 +35,11 @@ export const AppProvider = ({ children }) => {
   }
 
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setLoading(false);
+      return;
+    }
     fetchUser();
   }, []);
 

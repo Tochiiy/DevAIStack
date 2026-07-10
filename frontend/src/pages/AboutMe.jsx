@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { FiLogOut, FiUser, FiMail, FiSettings, FiBookOpen, FiTrash2, FiAlertTriangle, FiX } from "react-icons/fi";
+import { FiLogOut, FiUser, FiMail, FiShield, FiSettings, FiBookOpen, FiTrash2, FiAlertTriangle, FiX } from "react-icons/fi";
 import api from "./apiInterceptor";
 import { toast } from "react-toastify";
 
