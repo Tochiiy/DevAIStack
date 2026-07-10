@@ -1,15 +1,21 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import request from "supertest";
 
 dotenv.config({ path: ".env" });
 
-const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
-const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+const REDIS_URL = (process.env.UPSTASH_REDIS_REST_URL || "").trim();
+const REDIS_TOKEN = (process.env.UPSTASH_REDIS_REST_TOKEN || "").trim();
 
-const describeOrSkip = REDIS_URL && REDIS_TOKEN ? describe : describe.skip;
+let MongoMemoryServer;
+try {
+  MongoMemoryServer = (await import("mongodb-memory-server")).MongoMemoryServer;
+} catch {
+  /* mongodb-memory-server not available; tests will skip */
+}
+
+const describeOrSkip = MongoMemoryServer && REDIS_URL && REDIS_TOKEN ? describe : describe.skip;
 
 describeOrSkip("Auth Integration", () => {
   let app;
@@ -53,7 +59,7 @@ describeOrSkip("Auth Integration", () => {
     app.use(cors({ origin: "*", credentials: true }));
     app.set("trust proxy", 1);
     app.use("/api/auth", authRoutes);
-  }, 300000);
+  }, 60000);
 
   afterAll(async () => {
     if (mongoose.connection.readyState === 1) {
