@@ -1,5 +1,6 @@
 import TryCatch from "../middleware/tryCatch.js";
 import User from "../models/User.js";
+import redis from "../config/redis.js";
 
 export const getUsers = TryCatch(async (req, res) => {
   const page = parseInt(req.query.page) || 1;
@@ -32,11 +33,13 @@ export const updateRole = TryCatch(async (req, res) => {
   ).select("-password");
 
   if (!user) return res.status(404).json({ message: "User not found" });
+  await redis.del(`user:${user.id}`);
   res.json({ user, message: `Role updated to ${role}` });
 });
 
 export const deleteUser = TryCatch(async (req, res) => {
   const user = await User.findByIdAndDelete(req.params.id);
   if (!user) return res.status(404).json({ message: "User not found" });
+  await redis.del(`user:${user.id}`);
   res.json({ message: "User deleted" });
 });

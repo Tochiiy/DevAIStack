@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FiShield, FiArrowRight, FiUser, FiLogOut } from "react-icons/fi";
+import { FiArrowRight, FiUser, FiLogOut } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import HeroBanner from "../components/HeroBanner";
 import AuthFlow from "../components/AuthFlow";
@@ -15,7 +15,7 @@ const Home = () => {
         <section className="px-4 pt-24 pb-8">
           <div className="max-w-4xl mx-auto text-center">
             <div className="animate-float animate-glow inline-flex mb-8">
-              <FiShield size={80} className="text-yellow-500" />
+              <span className="text-yellow-500 font-mono font-extrabold text-6xl leading-none">&lt;/&gt;</span>
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight animate-fade-up">

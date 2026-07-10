@@ -5,7 +5,12 @@ const appName = () => process.env.APP_NAME || "Auth App";
 
 const baseUrl = () => (process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/+$/, "");
 
+/* ═══════════════════════════════════════════════════════════════
+   Verify email template — preserved for future re-enablement
+   ═══════════════════════════════════════════════════════════════
+
 export const getVerifyEmailHtml = (email, token) => {
+  const safeEmail = escapeHtml(email);
   const verifyUrl = `${baseUrl()}/verify-email/${encodeURIComponent(token)}`;
   return `
   <!DOCTYPE html>
@@ -24,7 +29,7 @@ export const getVerifyEmailHtml = (email, token) => {
     <div class="container">
       <p>${appName()}</p>
       <h1>Verify your email</h1>
-      <p>Hi ${email},</p>
+      <p>Hi ${safeEmail},</p>
       <p>Thanks for signing up! Please click the button below to verify your email address.</p>
       <a class="btn" href="${verifyUrl}">Verify Email</a>
       <p style="font-size:12px;color:#888;word-break:break-all;">${verifyUrl}</p>
@@ -34,6 +39,7 @@ export const getVerifyEmailHtml = (email, token) => {
   </html>
 `;
 };
+*/
 
 export const getWelcomeHtml = (name) => {
   const safeName = escapeHtml(name);
@@ -89,28 +95,5 @@ export const getResetPasswordHtml = (token) => {
 `;
 };
 
-export const getOtpHtml = (email, otp) => `
-  <!DOCTYPE html>
-  <html>
-  <head>
-    <meta charset="UTF-8" />
-    <style>
-      body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-      .container { max-width: 600px; margin: 40px auto; background: #fff; border-radius: 8px; padding: 30px; text-align: center; }
-      h1 { color: #333; }
-      p { color: #555; line-height: 1.6; }
-      .otp { font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #2563eb; margin: 24px 0; }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <p>${appName()}</p>
-      <h1>Your OTP</h1>
-      <p>Hi ${email},</p>
-      <p>Use the OTP below to proceed:</p>
-      <div class="otp">${otp}</div>
-      <p>This OTP expires in 5 minutes.</p>
-    </div>
-  </body>
-  </html>
-`;
+// ─── OTP email template (disabled — preserved for re-enable)
+// export const getOtpHtml = (email, otp) => { ... same as before ... };

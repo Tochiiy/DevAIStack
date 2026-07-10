@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FiSun, FiMoon, FiMenu, FiX, FiShield, FiLogOut, FiSettings, FiBookOpen } from "react-icons/fi";
+import { FiSun, FiMoon, FiMenu, FiX, FiLogOut, FiSettings, FiBookOpen } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 
@@ -40,7 +40,7 @@ const Navbar = () => {
             to="/"
             className="flex items-center gap-2 text-gray-900 dark:text-white font-bold text-lg md:text-xl"
           >
-            <FiShield className="text-yellow-500" size={24} />
+            <span className="text-yellow-500 font-mono font-extrabold text-lg leading-none">&lt;/&gt;</span>
             DevAIStack
           </Link>
 

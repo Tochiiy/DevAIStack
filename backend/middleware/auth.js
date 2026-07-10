@@ -2,6 +2,12 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import redis from "../config/redis.js";
 
+// ─── PROTECT MIDDLEWARE ─────────────────────────────────────
+// Verifies the JWT access token from the Authorization header or
+// httpOnly cookie, then caches the user document in Redis for 1h.
+// Implements tokenVersion invalidation: when a user resets their
+// password, tokenVersion increments, making all existing tokens
+// invalid — forcing re-login across all devices.
 export const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
@@ -36,6 +42,11 @@ export const protect = async (req, res, next) => {
         typeof cachedUser === "string" ? JSON.parse(cachedUser) : cachedUser;
     }
 
+    // tokenVersion mismatch → password was changed or session revoked
+    if (cachedUser.tokenVersion !== undefined && decoded.tokenVersion !== undefined && cachedUser.tokenVersion !== decoded.tokenVersion) {
+      return res.status(401).json({ message: "Session expired, login again" });
+    }
+
     req.user = cachedUser;
     next();
   } catch (error) {
@@ -49,6 +60,9 @@ export const protect = async (req, res, next) => {
   }
 };
 
+// ─── ADMIN MIDDLEWARE ───────────────────────────────────────
+// Must be used after `protect`. Checks that the authenticated
+// user has the "admin" role before allowing the request through.
 export const admin = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
     return next();

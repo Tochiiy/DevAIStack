@@ -3,6 +3,10 @@ import api from "../pages/apiInterceptor";
 
 const AppContext = createContext(null);
 
+// ─── AUTH PROVIDER ──────────────────────────────────────────
+// Fetches the current user on mount via GET /api/auth/me (backed
+// by the 401 interceptor queue + refresh token rotation). Exposes
+// the user object, auth status, loading state, and a logout helper.
 export const AppProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);

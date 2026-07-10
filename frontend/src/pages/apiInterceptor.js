@@ -7,6 +7,10 @@ const api = axios.create({
   withCredentials: true,
 });
 
+// ─── 401 Queue ──────────────────────────────────────────────
+// When multiple requests fail with 401 simultaneously (e.g. page
+// load), only one refresh call is made. The rest are queued and
+// replayed with the new token once it arrives.
 let isRefreshing = false;
 let failedQueue = [];
 
@@ -21,6 +25,7 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
+// Attach the access token from localStorage to every request
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
   if (token) {
@@ -29,6 +34,8 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// On 401: attempt a silent refresh. If refresh fails, clear auth
+// state so the user is redirected to login on their next action.
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -77,6 +84,5 @@ api.interceptors.response.use(
   },
 );
 
-api.axios = axios;
-
 export default api;
+

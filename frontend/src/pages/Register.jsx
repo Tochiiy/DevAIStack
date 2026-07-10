@@ -1,13 +1,20 @@
-import { useState } from "react";
+// ─── REGISTER PAGE ──────────────────────────────────────────
+// Creates an account immediately (no email verification). On
+// success, displays the user's backup codes and a link to login.
+// Backup codes are shown only once and should be saved by the user.
+import { useState, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { FiEye, FiEyeOff, FiLoader } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiLoader, FiCopy, FiCheck } from "react-icons/fi";
 import { toast } from "react-toastify";
 import api from "./apiInterceptor";
 
 const Register = () => {
   const [showPw, setShowPw] = useState(false);
   const [showCp, setShowCp] = useState(false);
+  const [done, setDone] = useState(false);
+  const [backupCodes, setBackupCodes] = useState([]);
+  const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
   const {
     register,
@@ -18,12 +25,25 @@ const Register = () => {
 
   const onSubmit = async (data) => {
     try {
-      await api.post("/api/auth/register", data);
-
-      toast.success("Account created! Check your email for verification.");
-      navigate("/verify");
+      const res = await api.post("/api/auth/register", data);
+      if (res.data.backupCodes?.length) {
+        setBackupCodes(res.data.backupCodes);
+      }
+      setDone(true);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Something went wrong");
+      const errMsg = err.response?.data?.errors?.join(", ") || err.response?.data?.message || "Something went wrong";
+      toast.error(errMsg);
+    }
+  };
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(backupCodes.join("\n"));
+      setCopied(true);
+      toast.success("Backup codes copied");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Failed to copy");
     }
   };
 
@@ -32,6 +52,40 @@ const Register = () => {
 
   const bg =
     "https://assets.bytebytego.com/diagrams/0199-full-stack-developer-roadmap.png";
+
+  if (done) {
+    return (
+      <div className="relative min-h-screen px-4 flex items-center justify-center overflow-hidden">
+        <img src={bg} alt="" className="absolute inset-0 w-full h-full object-cover object-center opacity-[0.35] dark:opacity-[0.20] pointer-events-none select-none" />
+        <div className="relative w-full max-w-lg bg-white/70 dark:bg-gray-800/75 backdrop-blur-md p-6 md:p-10 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
+          <h2 className="text-2xl font-bold mb-2">Account created!</h2>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">You can now log in with your email and password.</p>
+
+          {backupCodes.length > 0 && (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-300 dark:border-yellow-700 rounded-lg p-4 mb-6 text-left">
+              <p className="text-sm font-bold text-yellow-800 dark:text-yellow-200 mb-2">Save these backup codes</p>
+              <p className="text-xs text-yellow-700 dark:text-yellow-300 mb-3">
+                Use one to log in if you can't receive email OTPs. Each code works once.
+              </p>
+              <div className="grid grid-cols-2 gap-1 font-mono text-sm text-yellow-900 dark:text-yellow-100 bg-white dark:bg-gray-800 p-3 rounded border border-yellow-200 dark:border-yellow-800">
+                {backupCodes.map((code, i) => (
+                  <span key={i} className="tracking-wider">{code}</span>
+                ))}
+              </div>
+              <button onClick={handleCopy} className="mt-2 text-xs text-yellow-700 dark:text-yellow-300 hover:text-yellow-900 dark:hover:text-yellow-100 flex items-center gap-1">
+                {copied ? <FiCheck size={14} /> : <FiCopy size={14} />}
+                {copied ? "Copied!" : "Copy codes"}
+              </button>
+            </div>
+          )}
+
+          <Link to="/login" className="inline-block bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-8 rounded transition-colors">
+            Go to login
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen px-4 flex items-center justify-center overflow-hidden">

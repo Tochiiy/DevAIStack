@@ -24,7 +24,7 @@ const Footer = () => {
         <div className="mt-4 flex justify-center">
           <span className="inline-flex items-center gap-1 text-sm font-mono font-bold text-yellow-500 animate-pulse">
             <span className="inline-block w-5 h-5 bg-yellow-500 rounded flex items-center justify-center text-black text-xs font-bold">&lt;/&gt;</span>
-            dev
+            developer
           </span>
         </div>
       </div>

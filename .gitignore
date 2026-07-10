@@ -1,3 +1,5 @@
+.env
+FIX_INSTRUCTIONS.md
 node_modules/
 dist/
 build/
@@ -5,3 +7,4 @@ build/
 *.log
 .DS_Store
 .vite/
+admin-flow.md

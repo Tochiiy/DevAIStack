@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { FiLogOut, FiUser, FiMail, FiShield, FiSettings, FiBookOpen, FiTrash2, FiAlertTriangle, FiX, FiAward } from "react-icons/fi";
+import { FiLogOut, FiUser, FiMail, FiSettings, FiBookOpen, FiTrash2, FiAlertTriangle, FiX } from "react-icons/fi";
 import api from "./apiInterceptor";
 import { toast } from "react-toastify";
 
 const AboutMe = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const [promoting, setPromoting] = useState(false);
-  const { user, logout, fetchUser } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -37,7 +36,7 @@ const AboutMe = () => {
     <div className="px-4 pt-24 pb-16 flex justify-center">
       <div className="w-full max-w-lg bg-white dark:bg-gray-800 p-8 rounded-lg border border-gray-200 dark:border-gray-700">
           <div className="flex justify-center gap-3 mb-4">
-            <FiShield className="text-yellow-500" size={40} />
+            <span className="text-yellow-500 font-mono font-extrabold text-4xl leading-none">&lt;/&gt;</span>
           </div>
         <h2 className="text-2xl font-bold text-center mb-6">Me</h2>
         <div className="space-y-4">
@@ -63,27 +62,6 @@ const AboutMe = () => {
             </div>
           </div>
         </div>
-
-        {user?.role !== "admin" && (
-          <button
-            onClick={async () => {
-              setPromoting(true);
-              try {
-                await api.post("/api/auth/promote-admin", { email: user?.email });
-                await fetchUser();
-                toast.success("Promoted to admin! Access the Admin Panel now.");
-              } catch (err) {
-                toast.error(err.response?.data?.message || "Promotion failed");
-              } finally {
-                setPromoting(false);
-              }
-            }}
-            disabled={promoting}
-            className="w-full flex items-center justify-center gap-2 mt-6 bg-yellow-500 hover:bg-yellow-600 disabled:opacity-60 text-black font-bold py-3 rounded-lg transition-colors"
-          >
-            <FiAward size={18} /> {promoting ? "Promoting..." : "Become Admin"}
-          </button>
-        )}
 
         <Link
           to="/auth-guide"

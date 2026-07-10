@@ -42,7 +42,7 @@ const AboutPage = () => {
     <div className="px-4 pt-24 pb-16">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center gap-3 mb-2">
-          <FiShield className="text-yellow-500" size={36} />
+          <span className="text-yellow-500 font-mono font-extrabold text-4xl leading-none">&lt;/&gt;</span>
           <h1 className="text-4xl font-extrabold">About DevAIStack</h1>
         </div>
         <p className="text-gray-600 dark:text-gray-300 text-lg font-medium mb-10">

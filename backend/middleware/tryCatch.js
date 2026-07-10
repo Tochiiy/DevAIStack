@@ -1,3 +1,7 @@
+// ─── ASYNC ERROR WRAPPER ────────────────────────────────────
+// Wraps async route handlers so thrown errors are caught and
+// returned as 500 JSON instead of crashing the process.
+// In production, replace console.error with a structured logger.
 const TryCatch = (fn) => async (req, res, next) => {
   try {
     await fn(req, res, next);
@@ -8,3 +12,4 @@ const TryCatch = (fn) => async (req, res, next) => {
 };
 
 export default TryCatch;
+

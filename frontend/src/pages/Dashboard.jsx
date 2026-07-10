@@ -891,6 +891,19 @@ const apiTopics = [
     ],
   },
   {
+    title: "GraphQL", icon: SiGraphql, color: "text-pink-500",
+    items: [
+      "Schema-first design: types, queries, mutations, subscriptions, resolvers",
+      "Apollo Client: cache, fragments, pagination, optimistic updates, error handling",
+      "Apollo Server: code-first vs schema-first, data sources, context, directives",
+      "Node.js: graphql-js, type-graphql, NestJS GraphQL, code generation",
+      "N+1 problem: DataLoader, batching, caching, query complexity analysis",
+      "Federation: subgraphs, Apollo Gateway, entity resolution, managed federation",
+      "Security: depth limiting, cost analysis, persisted operations, auth directives",
+      "Compare: GraphQL vs REST vs tRPC — flexibility, tooling, ecosystem, performance",
+    ],
+  },
+  {
     title: "gRPC & tRPC", icon: SiFastapi, color: "text-green-500",
     items: [
       "gRPC: Protocol Buffers, service definition, unary/server/client streaming",
@@ -914,7 +927,7 @@ const apiTopics = [
 ];
 
 const ApiDesign = () => (
-  <Section title="API Design & Communication" desc="REST, gRPC, tRPC, WebSockets, SSE, Webhooks, WebRTC, HLS — all protocols with 2026 best practices.">
+  <Section title="API Design & Communication" desc="REST, GraphQL, gRPC, tRPC, WebSockets, SSE, Webhooks, WebRTC, HLS — all protocols with 2026 best practices.">
     <PrerequisitesBanner />
     {apiTopics.map(({ title, icon: Icon, color, items }) => (
       <Card key={title} className="mb-4">
@@ -939,6 +952,8 @@ const ApiDesign = () => (
       <ExternalLink href="https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API" label="WebSocket API" desc="MDN WebSocket reference" />
       <ExternalLink href="https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events" label="SSE Docs" desc="Server-Sent Events guide" />
       <ExternalLink href="https://webrtc.org/" label="WebRTC" desc="Peer-to-peer communication" />
+      <ExternalLink href="https://graphql.org/learn/" label="GraphQL Docs" desc="Query language, schema, resolvers, best practices" />
+      <ExternalLink href="https://www.apollographql.com/docs/" label="Apollo Docs" desc="Client, Server, Federation, caching" />
       <ExternalLink href="https://swagger.io/specification/" label="OpenAPI Spec" desc="API specification standard" />
       <ExternalLink href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods" label="HTTP Methods" desc="Semantics and idempotency" />
     </div>
@@ -1236,7 +1251,7 @@ const Dashboard = () => {
           <h1 className="text-4xl font-extrabold">DevAIStack — Full Engineering Curriculum</h1>
         </div>
         <p className="text-gray-600 dark:text-gray-300 text-lg font-medium mb-8">
-          Complete 2026 learning platform: full-stack, AI, system design, API design, security, DevOps, best practices, and career skills. Everything from beginner to advanced, nothing hidden.
+          Complete 2026 learning platform: full-stack, AI, system design, API design, security, DevOps, best practices, and career skills. Everything from beginner to advanced.
         </p>
 
         <div className="flex flex-wrap gap-1 mb-8 border-b border-gray-200 dark:border-gray-700 pb-2">

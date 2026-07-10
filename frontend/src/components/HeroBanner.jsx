@@ -1,11 +1,11 @@
 import { Link } from "react-router-dom";
-import { FiShield, FiArrowRight } from "react-icons/fi";
+import { FiArrowRight } from "react-icons/fi";
 
 const HeroBanner = () => {
   return (
     <>
       <div className="animate-float animate-glow inline-flex mb-8">
-        <FiShield size={80} className="text-yellow-500" />
+        <span className="text-yellow-500 font-mono font-extrabold text-6xl leading-none">&lt;/&gt;</span>
       </div>
 
       <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 leading-tight animate-fade-up">
