@@ -1,6 +1,6 @@
 # DevAIStack
 
-Production-grade MERN authentication system with direct login/registration (no email dependency), backup codes, JWT rotation with reuse detection, Redis rate limiting, and RBAC.
+Production-grade MERN authentication system with direct login/registration (no email dependency), backup codes, JWT rotation with reuse detection, Redis rate limiting, RBAC, and a full-stack engineering curriculum dashboard.
 
 Built by [Tochiiy](https://github.com/Tochiiy) — [tochukwusun24@gmail.com](mailto:tochukwusun24@gmail.com)
 
@@ -30,7 +30,7 @@ Client (React + Vite)
   │ Axios Interceptor (401 queue + refresh rotation)
   ▼
 Express API
-  ├── Rate Limiter (Redis INCR/EXPIRE, stale-key fallback)
+  ├── Rate Limiter (Redis INCR/EXPIRE, reusable middleware)
   ├── Zod Validation (safeParse, multi-error reporting)
   ├── Controller
   ├── MongoDB (users + backup codes)
@@ -51,6 +51,7 @@ Express API
 | Email | Nodemailer + Gmail SMTP (only for forgot-password) |
 | Validation | Zod |
 | Security | Helmet, bcrypt (12 rounds), httpOnly cookies, sameSite |
+| Testing | Vitest + Supertest + mongodb-memory-server |
 
 ---
 
@@ -72,6 +73,18 @@ npm run dev
 ```
 
 Open http://localhost:5173. First registered user is auto-promoted to admin.
+
+---
+
+## Testing
+
+```bash
+cd backend
+npm test                 # run once
+npm run test:watch       # watch mode
+```
+
+Uses `mongodb-memory-server` (auto-downloads, no external MongoDB needed) and your Upstash Redis credentials from `.env`. Tests skip gracefully if Redis vars are missing.
 
 ---
 
@@ -110,6 +123,26 @@ GET /health → { message: "Server is running", status: "healthy" }
 
 ---
 
+## Dashboard Curriculum
+
+The 1,280+ line Dashboard has been split into modular section components under `frontend/src/pages/dashboard/`:
+
+| Section | File | Content |
+|---------|------|---------|
+| Roadmap | `Roadmap.jsx` | 90-day structured learning path |
+| Full-Stack | `FullStack.jsx` | MERN + FastAPI + SVG architecture diagrams |
+| AI & Agents | `AiSection.jsx` | RAG architectures, agents, HITL + SVGs |
+| System Design | `SystemDesign.jsx` | SDLC, architecture styles, design patterns |
+| API Design | `ApiDesign.jsx` | REST, GraphQL, gRPC, tRPC, WebSocket, SSE |
+| Security | `Security.jsx` | JWT, OAuth, RBAC, OWASP top-10 |
+| DevOps | `DevOps.jsx` | Docker, CI/CD, cloud platforms, observability |
+| Best Practices | `BestPractices.jsx` | TDD, SOLID, 12-factor, performance |
+| Career Skills | `CareerSkills.jsx` | 8 skill categories with external links |
+
+Common UI components (`Section`, `Card`, `ExternalLink`, etc.) live in `dashboard/shared.jsx`.
+
+---
+
 ## Security
 
 - **XSS**: React auto-escapes JSX, `escapeHtml()` in email templates, Helmet CSP, httpOnly cookies
@@ -118,11 +151,12 @@ GET /health → { message: "Server is running", status: "healthy" }
 - **JWT**: 15m access (localStorage), 7d refresh (httpOnly cookie, SHA-256 hash in Redis)
 - **Rotation**: Every refresh issues a new pair; old hash deleted. Reuse attempt → 401
 - **tokenVersion**: Incremented on password reset → invalidates all existing JWTs instantly
-- **Rate limiting**: Redis INCR/EXPIRE per IP+email, 60s sliding window, stale-key fallback
+- **Rate limiting**: Redis INCR/EXPIRE per IP+email, reusable middleware, 60s sliding window
 - **RBAC**: `role` enum (admin/user), admin middleware, AdminRoute frontend guard
 - **Backup codes**: 6-digit, bcrypt-hashed, one-time use, rate-limited (5 per 5min)
 - **401 queue**: Axios interceptor queues concurrent 401s, single refresh call, replays all
 - **Account deletion**: Removes user + Redis tokens + clears cookies
+- **Resilience**: Background images fall back to CSS gradient on CDN failure (`onError` handler)
 
 ---
 
@@ -132,9 +166,12 @@ GET /health → { message: "Server is running", status: "healthy" }
 backend/
 ├── server.js                  Entry point + env validation
 ├── Dockerfile
+├── vitest.config.js           Test configuration
+├── __tests__/                 Integration tests
+│   └── auth.integration.test.js
 ├── config/                    db.js, redis.js, html.js (email templates)
 ├── controllers/               authController.js, adminController.js
-├── middleware/                 auth.js (protect + admin), tryCatch.js
+├── middleware/                 auth.js (protect + admin), rateLimiter.js, tryCatch.js
 ├── models/                    User.js
 ├── routes/                    authRoutes.js, adminRoutes.js
 ├── validators/                authValidate.js (Zod schemas)
@@ -148,7 +185,10 @@ frontend/
     ├── App.jsx                Lazy routes, GuestRoute, ProtectedRoute, AdminRoute
     ├── context/               AuthContext.jsx, ThemeContext.jsx
     ├── components/            Navbar, Footer, HeroBanner, AuthFlow, etc.
-    └── pages/                 Home, Login, Register, Dashboard, VerifyOtp, etc.
+    └── pages/
+        ├── Dashboard.jsx      Tab container (~90 lines)
+        ├── dashboard/         Section components (Roadmap, FullStack, AiSection, ...)
+        ├── Home, Login, Register, VerifyOtp, etc.
 ```
 
 ---
@@ -189,16 +229,3 @@ docker run -p 5000:5000 --env-file .env mern-auth-backend
 | SMTP_FROM | No* | — | |
 | APP_NAME | No | Auth App | |
 | NODE_ENV | No | development | `production` enables secure cookies |
-
----
-
-## Preserved Code (for future re-enable)
-
-The following code is commented out but fully preserved for re-enablement:
-
-- **OTP login**: `verifyOtp` controller + route (commented in authRoutes.js)
-- **Email verification**: `verifyEmail` controller + route + email template
-- **Frontend pages**: `VerifyEmail.jsx`, `Verify.jsx` (files intact, imports commented)
-- **OTP email template**: `getOtpHtml` in html.js
-
-To re-enable any flow: uncomment the relevant exports, routes, imports, and frontend components.

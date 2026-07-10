@@ -25,7 +25,7 @@ describeOrSkip("Auth Integration", () => {
   };
 
   beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create({ binary: { downloadTimeout: 300000 } });
+    mongoServer = await MongoMemoryServer.create();
     const uri = mongoServer.getUri();
 
     process.env.MONGO_URI = uri;
