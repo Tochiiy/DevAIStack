@@ -26,6 +26,7 @@ jobs:
       - run: npm run lint
       - run: npm test
         env:
+          TEST_MONGO_URI: ${{ secrets.TEST_MONGO_URI }}
           UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
           UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
 

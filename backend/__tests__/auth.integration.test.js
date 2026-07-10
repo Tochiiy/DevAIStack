@@ -5,23 +5,16 @@ import request from "supertest";
 
 dotenv.config({ path: ".env" });
 
+const TEST_MONGO_URI = (process.env.TEST_MONGO_URI || "").trim();
 const REDIS_URL = (process.env.UPSTASH_REDIS_REST_URL || "").trim();
 const REDIS_TOKEN = (process.env.UPSTASH_REDIS_REST_TOKEN || "").trim();
 
-let MongoMemoryServer;
-try {
-  MongoMemoryServer = (await import("mongodb-memory-server")).MongoMemoryServer;
-} catch {
-  /* mongodb-memory-server not available; tests will skip */
-}
-
-const describeOrSkip = MongoMemoryServer && REDIS_URL && REDIS_TOKEN ? describe : describe.skip;
+const describeOrSkip = TEST_MONGO_URI && REDIS_URL && REDIS_TOKEN ? describe : describe.skip;
 
 describeOrSkip("Auth Integration", () => {
   let app;
   let accessToken;
   let refreshCookie;
-  let mongoServer;
 
   const testUser = {
     name: "Test User",
@@ -31,10 +24,7 @@ describeOrSkip("Auth Integration", () => {
   };
 
   beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create();
-    const uri = mongoServer.getUri();
-
-    process.env.MONGO_URI = uri;
+    process.env.MONGO_URI = TEST_MONGO_URI;
     process.env.UPSTASH_REDIS_REST_URL = REDIS_URL;
     process.env.UPSTASH_REDIS_REST_TOKEN = REDIS_TOKEN;
     process.env.JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || "test-access-secret-key-min-32-chars!!";
@@ -59,14 +49,19 @@ describeOrSkip("Auth Integration", () => {
     app.use(cors({ origin: "*", credentials: true }));
     app.set("trust proxy", 1);
     app.use("/api/auth", authRoutes);
-  }, 60000);
+  }, 30000);
 
   afterAll(async () => {
     if (mongoose.connection.readyState === 1) {
-      await mongoose.connection.dropDatabase();
+      // Clean up test data
+      const db = mongoose.connection.db;
+      try {
+        await db.dropDatabase();
+      } catch {
+        // dropDatabase may fail if we don't have permissions; that's OK
+      }
       await mongoose.disconnect();
     }
-    if (mongoServer) await mongoServer.stop();
   });
 
   it("should register a new user", async () => {
