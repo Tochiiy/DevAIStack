@@ -21,14 +21,6 @@ const userSchema = mongoose.Schema(
       enum: ["admin", "user"],
       default: "user",
     },
-    // isVerified is always true for new registrations (email
-    // verification was removed). The field remains for backwards
-    // compatibility — the login controller no longer blocks
-    // unverified accounts since there's no verify flow.
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
     // Incremented on password reset to invalidate all existing
     // JWTs. Checked in the protect middleware on every request.
     tokenVersion: {

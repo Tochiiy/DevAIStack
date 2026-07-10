@@ -10,12 +10,10 @@ import Footer from "./components/Footer";
 const Home = lazy(() => import("./pages/Home"));
 const Register = lazy(() => import("./pages/Register"));
 const Login = lazy(() => import("./pages/Login"));
-// const VerifyEmail = lazy(() => import("./pages/VerifyEmail"));
 const VerifyOtp = lazy(() => import("./pages/VerifyOtp"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
-// const Verify = lazy(() => import("./pages/Verify"));
 const Logout = lazy(() => import("./pages/Logout"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const AuthGuide = lazy(() => import("./pages/AuthGuide"));
@@ -74,12 +72,10 @@ function AppContent() {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/register" element={<GuestRoute><Register /></GuestRoute>} />
               <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
-              {/* <Route path="/verify-email/:token" element={<GuestRoute><VerifyEmail /></GuestRoute>} /> */}
               <Route path="/verify-otp" element={<GuestRoute><VerifyOtp /></GuestRoute>} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/forgot-password" element={<GuestRoute><ForgotPassword /></GuestRoute>} />
               <Route path="/reset-password/:token" element={<GuestRoute><ResetPassword /></GuestRoute>} />
-              {/* <Route path="/verify" element={<GuestRoute><Verify /></GuestRoute>} /> */}
               <Route path="/logout" element={<Logout />} />
               <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
               <Route path="/auth-guide" element={<ProtectedRoute><AuthGuide /></ProtectedRoute>} />

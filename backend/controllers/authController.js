@@ -29,27 +29,6 @@ export const register = TryCatch(async (req, res) => {
   const { name, email: rawEmail, password } = result.data;
   const email = rawEmail.toLowerCase();
 
-  // ── Rate limit: 3 registries / 60s window per IP+email ──
-  const registerKey = `register-rate-limit:${req.ip}:${email}`;
-  let attempts;
-  try {
-    attempts = await redis.incr(registerKey);
-  } catch {
-    await redis.del(registerKey);
-    attempts = await redis.incr(registerKey);
-  }
-  if (attempts === 1) {
-    await redis.expire(registerKey, 60);
-  }
-  if (attempts > 3 && (await redis.ttl(registerKey)) === -1) {
-    await redis.del(registerKey);
-  }
-  if (attempts > 3) {
-    return res
-      .status(429)
-      .json({ message: "Too many requests, try again later" });
-  }
-
   if (await User.findOne({ email })) {
     return res.status(400).json({ message: "Unable to register with this email." });
   }
@@ -62,7 +41,6 @@ export const register = TryCatch(async (req, res) => {
     name,
     email,
     password: hashedPassword,
-    isVerified: true,
     role: userCount === 0 ? "admin" : "user",
   });
 
@@ -84,65 +62,7 @@ export const register = TryCatch(async (req, res) => {
   });
 });
 
-/* ═══════════════════════════════════════════════════════════════
-   verifyEmail — preserved for future re-enablement
-
-   When re-enabling: uncomment the export, the route in
-   authRoutes.js, and the frontned route in App.jsx. Then remove
-   `isVerified: true` from `register` above (or keep it and use
-   this for a separate invite flow).
-
-export const verifyEmail = TryCatch(async (req, res) => {
-  const { token } = req.params;
-  if (!token) {
-    return res.status(400).json({ message: "Verification token is required" });
-  }
-  const rateKey = `verify-rate-limit:${req.ip}`;
-  let rateAttempts;
-  try {
-    rateAttempts = await redis.incr(rateKey);
-  } catch {
-    await redis.del(rateKey);
-    rateAttempts = await redis.incr(rateKey);
-  }
-  if (rateAttempts === 1) await redis.expire(rateKey, 60);
-  if (rateAttempts > 10) {
-    return res.status(429).json({ message: "Too many requests, try again later" });
-  }
-  const verifyKey = `verify:${token}`;
-  let pendingUser = await redis.get(verifyKey);
-  if (!pendingUser) {
-    return res.status(400).json({ message: "Verification token is invalid or expired" });
-  }
-  await redis.del(verifyKey);
-  pendingUser.email = pendingUser.email.toLowerCase();
-  if (await User.findOne({ email: pendingUser.email })) {
-    return res.status(400).json({ message: "User already exists" });
-  }
-  const userCount = await User.countDocuments();
-  const newUser = await User.create({
-    name: pendingUser.name,
-    email: pendingUser.email,
-    password: pendingUser.hashedPassword,
-    isVerified: true,
-    role: userCount === 0 ? "admin" : "user",
-  });
-  const rawCodes = [];
-  const hashedCodes = [];
-  for (let i = 0; i < 5; i++) {
-    const code = crypto.randomInt(100000, 1000000).toString();
-    rawCodes.push(code);
-    hashedCodes.push(await bcrypt.hash(code, 6));
-  }
-  newUser.backupCodes = hashedCodes;
-  await newUser.save();
-  res.status(201).json({
-    message: "Email verified successfully. Account created.",
-    user: { _id: newUser.id, name: newUser.name, email: newUser.email },
-    backupCodes: rawCodes,
-  });
-});
-═══════════════════════════════════════════════════════════════ */
+/* verifyEmail removed — all registrations create users directly */
 
 // ─── LOGIN ───────────────────────────────────────────────────
 // Direct email + password login (no OTP). Returns access token
@@ -156,27 +76,6 @@ export const login = TryCatch(async (req, res) => {
 
   const { email: rawEmail, password } = result.data;
   const email = rawEmail.toLowerCase();
-
-  // ── Rate limit: 5 attempts / 60s per IP+email ──
-  const loginKey = `login-rate-limit:${req.ip}:${email}`;
-  let attempts;
-  try {
-    attempts = await redis.incr(loginKey);
-  } catch {
-    await redis.del(loginKey);
-    attempts = await redis.incr(loginKey);
-  }
-  if (attempts === 1) {
-    await redis.expire(loginKey, 60);
-  }
-  if (attempts > 5 && (await redis.ttl(loginKey)) === -1) {
-    await redis.del(loginKey);
-  }
-  if (attempts > 5) {
-    return res
-      .status(429)
-      .json({ message: "Too many login attempts, try again later" });
-  }
 
   const user = await User.findOne({ email });
   if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -235,21 +134,6 @@ export const verifyOtp = TryCatch(async (req, res) => {
     return res.status(400).json({ message: "Email and OTP are required" });
   }
 
-  const rateKey = `otp-rate-limit:${req.ip}:${email}`;
-  let rateAttempts;
-  try {
-    rateAttempts = await redis.incr(rateKey);
-  } catch {
-    await redis.del(rateKey);
-    rateAttempts = await redis.incr(rateKey);
-  }
-  if (rateAttempts === 1) {
-    await redis.expire(rateKey, 60);
-  }
-  if (rateAttempts > 5) {
-    return res.status(429).json({ message: "Too many OTP attempts, try again later" });
-  }
-
   const otpKey = `otp:${email}`;
   const storedOtp = await redis.get(otpKey);
 
@@ -272,14 +156,6 @@ export const verifyOtp = TryCatch(async (req, res) => {
   const accessToken = generateAccessToken(user.id, user.tokenVersion);
   const refreshToken = generateRefreshToken(user.id, user.tokenVersion);
 
-  // ─── Welcome email disabled (email-dependent auth removed) ──
-  // sendMail({
-  //   to: email,
-  //   subject: "Welcome to DevAIStack!",
-  //   html: getWelcomeHtml(user.name),
-  // }).catch((err) =>
-  //   console.error(`Email failed (Welcome to DevAIStack!):`, err.message),
-  // );
   const REFRESH_TTL = 7 * 24 * 60 * 60;
   await redis.set(`refresh:${hashToken(refreshToken)}`, user.id, { EX: REFRESH_TTL });
   res.cookie("refreshToken", refreshToken, {
@@ -360,21 +236,6 @@ export const forgotPassword = TryCatch(async (req, res) => {
     return res.status(400).json({ message: "Email is required" });
   }
 
-  const rateKey = `forgot-rate-limit:${req.ip}`;
-  let rateAttempts;
-  try {
-    rateAttempts = await redis.incr(rateKey);
-  } catch {
-    await redis.del(rateKey);
-    rateAttempts = await redis.incr(rateKey);
-  }
-  if (rateAttempts === 1) {
-    await redis.expire(rateKey, 60);
-  }
-  if (rateAttempts > 3) {
-    return res.status(429).json({ message: "Too many requests, try again later" });
-  }
-
   const user = await User.findOne({ email });
   if (user) {
     const resetToken = crypto.randomBytes(32).toString("hex");
@@ -410,21 +271,6 @@ export const resetPassword = TryCatch(async (req, res) => {
   if (!result.success) {
     const errors = result.error.issues.map((i) => i.message);
     return res.status(400).json({ message: "Invalid password", errors });
-  }
-
-  const rateKey = `reset-rate-limit:${req.ip}`;
-  let rateAttempts;
-  try {
-    rateAttempts = await redis.incr(rateKey);
-  } catch {
-    await redis.del(rateKey);
-    rateAttempts = await redis.incr(rateKey);
-  }
-  if (rateAttempts === 1) {
-    await redis.expire(rateKey, 60);
-  }
-  if (rateAttempts > 5) {
-    return res.status(429).json({ message: "Too many requests, try again later" });
   }
 
   const resetKey = `reset:${token}`;
@@ -496,24 +342,6 @@ export const useBackupCode = TryCatch(async (req, res) => {
   const email = rawEmail?.toLowerCase();
   if (!email || !code) {
     return res.status(400).json({ message: "Email and backup code are required" });
-  }
-
-  const rateKey = `backup-code-rate-limit:${req.ip}:${email}`;
-  let attempts;
-  try {
-    attempts = await redis.incr(rateKey);
-  } catch {
-    await redis.del(rateKey);
-    attempts = await redis.incr(rateKey);
-  }
-  if (attempts === 1) {
-    await redis.expire(rateKey, 300);
-  }
-  if (attempts > 5 && (await redis.ttl(rateKey)) === -1) {
-    await redis.del(rateKey);
-  }
-  if (attempts > 5) {
-    return res.status(429).json({ message: "Too many attempts, try again later" });
   }
 
   const user = await User.findOne({ email });
