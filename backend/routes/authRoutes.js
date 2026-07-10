@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, logout, verifyOtp, useBackupCode, forgotPassword, resetPassword, refreshToken, deleteAccount, getMe, promoteAdmin } from "../controllers/authController.js";
+import { register, login, logout, useBackupCode, forgotPassword, resetPassword, refreshToken, deleteAccount, getMe, promoteAdmin } from "../controllers/authController.js";
 import { protect, admin } from "../middleware/auth.js";
 import rateLimiter from "../middleware/rateLimiter.js";
 

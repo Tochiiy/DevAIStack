@@ -6,6 +6,8 @@ Built by [Tochiiy](https://github.com/Tochiiy) — [tochukwusun24@gmail.com](mai
 
 **Live:** [Backend API](https://devaistack.onrender.com) | [Frontend App](https://devaistack.vercel.app)
 
+[![CI](https://github.com/Tochiiy/DevAIStack/actions/workflows/ci.yml/badge.svg)](https://github.com/Tochiiy/DevAIStack/actions/workflows/ci.yml)
+
 ---
 
 ## Auth Flow
