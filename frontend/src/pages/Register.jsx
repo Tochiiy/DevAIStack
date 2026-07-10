@@ -56,7 +56,7 @@ const Register = () => {
   if (done) {
     return (
       <div className="relative min-h-screen px-4 flex items-center justify-center overflow-hidden">
-        <img src={bg} alt="" className="absolute inset-0 w-full h-full object-cover object-center opacity-[0.35] dark:opacity-[0.20] pointer-events-none select-none" />
+        <img src={bg} alt="" onError={(e) => (e.target.style.display = "none")} className="absolute inset-0 w-full h-full object-cover object-center opacity-[0.35] dark:opacity-[0.20] pointer-events-none select-none" />
         <div className="relative w-full max-w-lg bg-white/70 dark:bg-gray-800/75 backdrop-blur-md p-6 md:p-10 rounded-lg border border-gray-200 dark:border-gray-700 text-center">
           <h2 className="text-2xl font-bold mb-2">Account created!</h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">You can now log in with your email and password.</p>
@@ -92,6 +92,7 @@ const Register = () => {
       <img
         src={bg}
         alt=""
+        onError={(e) => (e.target.style.display = "none")}
         className="absolute inset-0 w-full h-full object-cover object-center opacity-[0.35] dark:opacity-[0.20] pointer-events-none select-none"
       />
       <div className="relative w-full max-w-lg bg-white/70 dark:bg-gray-800/75 backdrop-blur-md p-6 md:p-10 rounded-lg border border-gray-200 dark:border-gray-700">

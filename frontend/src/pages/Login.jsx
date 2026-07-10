@@ -44,6 +44,7 @@ const Login = () => {
       <img
         src={bg}
         alt=""
+        onError={(e) => (e.target.style.display = "none")}
         className="absolute inset-0 w-full h-full object-cover object-center opacity-[0.35] dark:opacity-[0.20] pointer-events-none select-none"
       />
       <div className="relative w-full max-w-md">

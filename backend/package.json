@@ -6,7 +6,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@upstash/redis": "^1.31.0",
@@ -26,6 +28,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2",
+    "vitest": "^4.1.10"
   }
 }

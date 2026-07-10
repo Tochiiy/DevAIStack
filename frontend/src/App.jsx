@@ -54,6 +54,7 @@ function AppContent() {
       <img
         src={bg}
         alt=""
+        onError={(e) => (e.target.style.display = "none")}
         className="fixed inset-0 w-full h-full object-cover object-center opacity-[0.15] dark:opacity-[0.08] pointer-events-none select-none"
       />
       <div className="relative z-0 flex flex-col min-h-screen">
