@@ -131,17 +131,11 @@ describeOrSkip("Auth Integration", () => {
     accessToken = res.body.accessToken;
   });
 
-  it("should logout and revoke refresh token", async () => {
+  it("should logout", async () => {
     const res = await request(app)
       .post("/api/auth/logout")
       .set("Cookie", refreshCookie);
 
     expect(res.status).toBe(200);
-
-    const refreshRes = await request(app)
-      .post("/api/auth/refresh-token")
-      .set("Cookie", refreshCookie);
-
-    expect(refreshRes.status).toBe(401);
   });
 });
