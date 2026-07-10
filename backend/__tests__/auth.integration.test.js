@@ -1,16 +1,22 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import request from "supertest";
+import { MongoMemoryServer } from "mongodb-memory-server";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+import request from "supertest";
 
-const TEST_MONGO_URI = process.env.TEST_MONGO_URI;
-const TEST_REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
+dotenv.config({ path: ".env" });
 
-const describeOrSkip = TEST_MONGO_URI && TEST_REDIS_URL ? describe : describe.skip;
+const REDIS_URL = process.env.UPSTASH_REDIS_REST_URL;
+const REDIS_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
+
+const describeOrSkip = REDIS_URL && REDIS_TOKEN ? describe : describe.skip;
 
 describeOrSkip("Auth Integration", () => {
   let app;
   let accessToken;
   let refreshCookie;
+  let mongoServer;
+
   const testUser = {
     name: "Test User",
     email: `test_${Date.now()}@example.com`,
@@ -19,19 +25,23 @@ describeOrSkip("Auth Integration", () => {
   };
 
   beforeAll(async () => {
-    process.env.MONGO_URI = TEST_MONGO_URI;
-    process.env.JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || "test-access-secret";
-    process.env.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "test-refresh-secret";
-    process.env.NODE_ENV = "test";
-    process.env.UPSTASH_REDIS_REST_URL = TEST_REDIS_URL;
+    mongoServer = await MongoMemoryServer.create({ binary: { downloadTimeout: 300000 } });
+    const uri = mongoServer.getUri();
 
-    const { default: express } = await import("express");
-    const { default: cookieParser } = await import("cookie-parser");
-    const { default: cors } = await import("cors");
-    const { default: helmet } = await import("helmet");
-    const { default: morgan } = await import("morgan");
-    const { default: authRoutes } = await import("../routes/authRoutes.js");
-    const { default: connectDB } = await import("../config/db.js");
+    process.env.MONGO_URI = uri;
+    process.env.UPSTASH_REDIS_REST_URL = REDIS_URL;
+    process.env.UPSTASH_REDIS_REST_TOKEN = REDIS_TOKEN;
+    process.env.JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET || "test-access-secret-key-min-32-chars!!";
+    process.env.JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || "test-refresh-secret-key-min-32-chars!";
+    process.env.NODE_ENV = "test";
+
+    const express = (await import("express")).default;
+    const cookieParser = (await import("cookie-parser")).default;
+    const cors = (await import("cors")).default;
+    const helmet = (await import("helmet")).default;
+    const morgan = (await import("morgan")).default;
+    const connectDB = (await import("../config/db.js")).default;
+    const authRoutes = (await import("../routes/authRoutes.js")).default;
 
     await connectDB();
 
@@ -43,13 +53,14 @@ describeOrSkip("Auth Integration", () => {
     app.use(cors({ origin: "*", credentials: true }));
     app.set("trust proxy", 1);
     app.use("/api/auth", authRoutes);
-  }, 30000);
+  }, 300000);
 
   afterAll(async () => {
     if (mongoose.connection.readyState === 1) {
       await mongoose.connection.dropDatabase();
       await mongoose.disconnect();
     }
+    if (mongoServer) await mongoServer.stop();
   });
 
   it("should register a new user", async () => {
