@@ -13,7 +13,8 @@
 </p>
 
 # DevAIStack
-
+#Link 
+https://devaistack.vercel.app
 Production-grade MERN authentication system with direct login/registration (no email dependency), backup codes, JWT rotation with reuse detection, Redis rate limiting, RBAC, and a full-stack engineering curriculum dashboard.
 
 ---
