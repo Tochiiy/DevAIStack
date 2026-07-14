@@ -1,12 +1,20 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB" alt="React"/>
+  <img src="https://img.shields.io/badge/Express-000000?logo=express&logoColor=fff" alt="Express"/>
+  <img src="https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=fff" alt="MongoDB"/>
+  <img src="https://img.shields.io/badge/Redis-FF4438?logo=redis&logoColor=fff" alt="Redis"/>
+  <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=fff" alt="Docker"/>
+</p>
+
+<p align="center">
+  <a href="https://github.com/Tochiiy/DevAIStack/actions/workflows/ci.yml"><img src="https://github.com/Tochiiy/DevAIStack/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
+  <a href="https://devaistack.vercel.app"><img src="https://img.shields.io/badge/frontend-vercel-%23000000?logo=vercel" alt="Vercel"/></a>
+  <a href="https://devaistack.onrender.com"><img src="https://img.shields.io/badge/backend-render-%2346E3B7?logo=render" alt="Render"/></a>
+</p>
+
 # DevAIStack
 
 Production-grade MERN authentication system with direct login/registration (no email dependency), backup codes, JWT rotation with reuse detection, Redis rate limiting, RBAC, and a full-stack engineering curriculum dashboard.
-
-Built by [Tochiiy](https://github.com/Tochiiy) — [tochukwusun24@gmail.com](mailto:tochukwusun24@gmail.com)
-
-**Live:** [Backend API](https://devaistack.onrender.com) | [Frontend App](https://devaistack.vercel.app)
-
-[![CI](https://github.com/Tochiiy/DevAIStack/actions/workflows/ci.yml/badge.svg)](https://github.com/Tochiiy/DevAIStack/actions/workflows/ci.yml)
 
 ---
 
